@@ -19,9 +19,9 @@ export default function DashboardPage() {
     : health.healthScore >= 50 ? "#f59e0b" : "#ef4444";
 
   return (
-<div className="page-layout">
-  <Sidebar />
-  <div className="page-main">
+    <div style={s.layout}>
+      <Sidebar />
+      <div style={s.main}>
         <h1 style={s.heading}>📊 Dashboard</h1>
         <p style={s.sub}>ยินดีต้อนรับ {user?.username} ({user?.role})</p>
 
@@ -45,8 +45,8 @@ export default function DashboardPage() {
 
             {/* โซนตารางรายการสินค้าที่ต้องระวัง */}
             <h2 style={s.tableTitle}>🚨 รายการที่ต้องระวัง</h2>
-<div className="table-wrapper">
-  <table className="responsive-table">
+            <div style={s.tableContainer}>
+              <table style={s.table}>
                 <thead>
                   <tr style={s.th}>
                     <td style={s.tdth}>สินค้า</td>
