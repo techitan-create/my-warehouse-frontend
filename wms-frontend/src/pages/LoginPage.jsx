@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import api, { API_URL } from "../api/axios";
+import whbg from "../assets/whbg.jpg";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ username: "", password: "" });
@@ -75,7 +76,7 @@ const s = {
     alignItems: "center",
     justifyContent: "center", 
     background: "#f8fafc", 
-    backgroundImage: "url('../assets/whbg.jpg')",
+    backgroundImage: `linear-gradient(rgba(248, 250, 252, 0.6), rgba(248, 250, 252, 0.6)), url(${whbg})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
