@@ -58,46 +58,36 @@ export default function DashboardPage() {
 
         {health && (
           <>
-            <div style={s.alertRow}>
-              <div style={s.alertCard}>
-                <div style={s.alertTitle}>รายการที่ต้องระวัง</div>
-                <div style={s.alertNumber}>{alertItems.length} รายการ</div>
-                <div style={s.alertCaption}>Health Score ต่ำ</div>
-              </div>
-              <div style={s.alertCard}>
-                <div style={s.alertTitle}>ใกล้สต็อกต่ำ</div>
-                <div style={s.alertNumber}>{totalLowStock} รายการ</div>
-                <div style={s.alertCaption}>ต่ำกว่าเกณฑ์ที่กำหนด</div>
-              </div>
-              <div style={s.alertCard}>
-                <div style={s.alertTitle}>สินค้าสต็อกหมด</div>
-                <div style={s.alertNumber}>{totalCritical} รายการ</div>
-                <div style={s.alertCaption}>ต้องสั่งซื้อล่วงหน้า</div>
-              </div>
+            <div style={s.cards}>
+              <StatCard label="สินค้าทั้งหมด" value={health.totalProducts} color="#4338ca" icon="📦" />
+              <StatCard label="ปกติ" value={health.healthyCount} color="#16a34a" icon="✅" />
+              <StatCard label="สต็อกต่ำ" value={totalLowStock} color="#d97706" icon="⚠️" />
+              <StatCard label="สินค้าหมด" value={totalCritical} color="#b91c1c" icon="⛔" />
             </div>
-
-            <div style={s.summaryGrid} className="responsive-summary-grid">
-              <div style={s.healthCard}>
-                <div style={s.healthCardLabel}>Health Score</div>
-                <div style={s.healthScoreRow}>
-                  <div style={scoreCircleStyle}>
-                    <div style={s.scoreLabel}>{healthScorePercent}%</div>
-                  </div>
-                  <div style={s.healthMeta}>
-                    <div style={s.healthMetaLabel}>คะแนนรวมคลัง</div>
-                    <div style={s.healthMetaValue}>{health.items?.length ?? 0} สินค้า</div>
-                    <div style={s.healthStatus}>{scoreStatus}</div>
-                    <div style={s.healthTrendBar}>
-                      <div style={{...s.healthTrendFill, width: `${healthScorePercent}%`, background: scoreColor}} />
+            <div style={s.pageCard}>
+              <div style={s.topGrid}>
+                <div style={s.healthCard}>
+                  <div style={s.healthCardLabel}>Health Score</div>
+                  <div style={s.healthScoreRow}>
+                    <div style={scoreCircleStyle}>
+                      <div style={s.scoreLabel}>{healthScorePercent}%</div>
+                    </div>
+                    <div style={s.healthMeta}>
+                      <div style={s.healthMetaLabel}>คะแนนรวมคลัง</div>
+                      <div style={s.healthMetaValue}>{health.items?.length ?? 0} สินค้า</div>
+                      <div style={s.healthStatus}>{scoreStatus}</div>
+                      <div style={s.healthTrendBar}>
+                        <div style={{...s.healthTrendFill, width: `${healthScorePercent}%`, background: scoreColor}} />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div style={s.cards}>
-                <StatCard label="สินค้าทั้งหมด" value={health.totalProducts} color="#6366f1" icon="📦" />
-                <StatCard label="สินค้าปกติ" value={health.healthyCount} color="#22c55e" icon="✅" />
-                <StatCard label="สต็อกต่ำ" value={totalLowStock} color="#f59e0b" icon="⚠️" />
-                <StatCard label="สต็อกหมด" value={totalCritical} color="#ef4444" icon="⛔" />
+                <div style={s.overviewGrid}>
+                  <OverviewCard label="สินค้าทั้งหมด" value={health.totalProducts} icon="📦" color="#6366f1" />
+                  <OverviewCard label="ปกติ" value={health.healthyCount} icon="✅" color="#22c55e" />
+                  <OverviewCard label="สต็อกต่ำ" value={totalLowStock} icon="⚠️" color="#f59e0b" />
+                  <OverviewCard label="สินค้าหมด" value={totalCritical} icon="⛔" color="#ef4444" />
+                </div>
               </div>
             </div>
 
@@ -189,6 +179,29 @@ export default function DashboardPage() {
 }
 
 // คอมโพเนนต์การ์ดแบบขาวคลีนตัดขอบเทาบางๆ มีมิติเงาซอฟท์ๆ
+function OverviewCard({ label, value, icon, color }) {
+  return (
+    <div style={{
+      background: "#ffffff",
+      borderRadius: 20,
+      padding: 20,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
+      border: "1px solid #eef2ff"
+    }}>
+      <div>
+        <div style={{ fontSize: 14, fontWeight: 700, color: "#475569", marginBottom: 8 }}>{label}</div>
+        <div style={{ fontSize: 32, fontWeight: 800, color: "#0f172a" }}>{value}</div>
+      </div>
+      <div style={{ width: 48, height: 48, borderRadius: 16, background: "rgba(99, 102, 241, 0.08)", display: "grid", placeItems: "center", color, fontSize: 18 }}>
+        {icon}
+      </div>
+    </div>
+  );
+}
+
 function StatCard({ label, value, color, icon }) {
   return (
     <div style={{ 
@@ -222,6 +235,13 @@ const s = {
   alertTitle: { fontSize: 13, fontWeight: 700, color: "#0f172a", marginBottom: 6, letterSpacing: "0.08em", textTransform: "uppercase" },
   alertNumber: { fontSize: 28, fontWeight: 800, color: "#111827", marginBottom: 8 },
   alertCaption: { fontSize: 13, color: "#475569" },
+  pageCard: { background: "#ffffff", borderRadius: 28, padding: 28, border: "1px solid #eef2ff", boxShadow: "0 26px 60px rgba(15, 23, 42, 0.08)", marginBottom: 28 },
+  topGrid: { display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 18, marginBottom: 28 },
+  overviewGrid: { display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 16 },
+  watchlistHeader: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 20, flexWrap: "wrap" },
+  watchlistTitle: { fontSize: 18, fontWeight: 700, color: "#0f172a" },
+  watchlistSubtitle: { fontSize: 13, color: "#64748b" },
+  viewAllButton: { padding: "10px 16px", borderRadius: 999, border: "1px solid #dbeafe", background: "#ffffff", color: "#2563eb", fontWeight: 700, cursor: "pointer" },
   summaryGrid: { display: "grid", gridTemplateColumns: "320px 1fr", gap: 18, marginBottom: 28 },
   healthCard: { background: "#ffffff", borderRadius: 24, padding: 28, border: "1px solid #e2e8f0", boxShadow: "0 16px 36px rgba(15, 23, 42, 0.06)" },
   healthCardLabel: { fontSize: 13, fontWeight: 700, color: "#0f172a", marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.08em" },
