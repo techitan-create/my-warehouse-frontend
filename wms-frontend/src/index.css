@@ -114,6 +114,10 @@ code {
 .sidebar {
   width: 220px;
   background: #1e1e2e;
+  background-image: url('/wh.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -121,6 +125,21 @@ code {
   min-height: 100vh;
   position: relative;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(30, 30, 46, 0.88), rgba(30, 30, 46, 0.72));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sidebar > * {
+  position: relative;
+  z-index: 1;
 }
 
 .sidebar-toggle {
