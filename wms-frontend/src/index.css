@@ -114,7 +114,7 @@ code {
 .sidebar {
   width: 220px;
   background: #1e1e2e;
-  background-image: url('/wh.jpg');
+  background-image: url('./assets/wh.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
