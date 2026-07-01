@@ -7,6 +7,7 @@ import InventoryPage from "./pages/InventoryPage";
 import WarehousesPage from "./pages/WarehousesPage";
 import UsersPage from "./pages/UsersPage";
 import OAuth2Callback from "./pages/OAuth2Callback";
+import { Pointer } from "./components/ui/pointer";
 
 function ProtectedRoute({ children, roles }) {
   const { token, user } = useAuth();
@@ -19,23 +20,25 @@ function ProtectedRoute({ children, roles }) {
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/oauth2/callback" element={<OAuth2Callback />} />
-        <Route path="/dashboard" element={
-          <ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-        <Route path="/products" element={
-          <ProtectedRoute><ProductsPage /></ProtectedRoute>} />
-        <Route path="/inventory" element={
-          <ProtectedRoute><InventoryPage /></ProtectedRoute>} />
-        <Route path="/warehouses" element={
-          <ProtectedRoute><WarehousesPage /></ProtectedRoute>} />
-        <Route path="/users" element={
-          <ProtectedRoute roles={["ADMIN"]}>
-            <UsersPage />
-          </ProtectedRoute>} />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
+      <Pointer>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/oauth2/callback" element={<OAuth2Callback />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/products" element={
+            <ProtectedRoute><ProductsPage /></ProtectedRoute>} />
+          <Route path="/inventory" element={
+            <ProtectedRoute><InventoryPage /></ProtectedRoute>} />
+          <Route path="/warehouses" element={
+            <ProtectedRoute><WarehousesPage /></ProtectedRoute>} />
+          <Route path="/users" element={
+            <ProtectedRoute roles={["ADMIN"]}>
+              <UsersPage />
+            </ProtectedRoute>} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </Pointer>
     </BrowserRouter>
   );
 }
