@@ -33,9 +33,9 @@ export default function ProductsPage() {
   };
 
   return (
-    <div style={s.layout}>
+    <div style={s.layout} className="responsive-page-layout page-layout">
       <Sidebar />
-      <div style={s.main}>
+      <div style={s.main} className="responsive-main page-main">
         <h1 style={s.heading}>📦 จัดการสินค้า</h1>
 
         {/* แผงฟอร์ม เพิ่ม/แก้ไข สินค้า */}
@@ -81,8 +81,8 @@ export default function ProductsPage() {
         </div>
 
         {/* ตารางข้อมูลสินค้าแบบตีกรอบล้อมรอบมน */}
-        <div style={s.tableContainer}>
-          <table style={s.table}>
+        <div style={s.tableContainer} className="responsive-table-wrapper">
+          <table style={s.table} className="responsive-table">
             <thead>
               <tr style={s.thRow}>
                 <th style={s.tdth}>ID</th>

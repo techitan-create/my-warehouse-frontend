@@ -43,16 +43,16 @@ export default function DashboardPage() {
   const totalCritical = health?.criticalCount ?? 0;
 
   return (
-    <div style={s.layout}>
+    <div style={s.layout} className="responsive-page-layout page-layout">
       <Sidebar />
-      <div style={s.main}>
+      <div style={s.main} className="responsive-main page-main">
         <div style={s.headerRow}>
           <div>
             <h1 style={s.heading}>ยินดีต้อนรับ, {user?.username} ({user?.role}) 👋</h1>
             <p style={s.subSmall}>ภาพรวมการบริหารจัดการคลังสินค้า</p>
           </div>
-          <div style={s.topControls}>
-            <div style={s.dateChip}>{currentDate || "กำลังโหลดวันที่..."}</div>
+          <div style={s.topControls} className="responsive-top-controls">
+            <div style={s.dateChip} className="responsive-date-chip">{currentDate || "กำลังโหลดวันที่..."}</div>
           </div>
         </div>
 
@@ -76,7 +76,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div style={s.summaryGrid}>
+            <div style={s.summaryGrid} className="responsive-summary-grid">
               <div style={s.healthCard}>
                 <div style={s.healthCardLabel}>Health Score</div>
                 <div style={s.healthScoreRow}>
@@ -101,7 +101,7 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div style={s.bottomGrid}>
+            <div style={s.bottomGrid} className="responsive-bottom-grid">
               <div style={s.tablePanel}>
                 <div style={s.sectionHeader}>
                   <div>
@@ -110,7 +110,7 @@ export default function DashboardPage() {
                   </div>
                   <button style={s.linkButton}>ดูทั้งหมด</button>
                 </div>
-                <div style={s.tableContainer}>
+                <div style={s.tableContainer} className="responsive-table-wrapper">
                   <table style={s.table}>
                     <thead>
                       <tr style={s.th}>

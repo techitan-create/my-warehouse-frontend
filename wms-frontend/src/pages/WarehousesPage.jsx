@@ -42,9 +42,9 @@ export default function WarehousesPage() {
   };
 
   return (
-    <div style={s.layout}>
+    <div style={s.layout} className="responsive-page-layout page-layout">
       <Sidebar />
-      <div style={s.main}>
+      <div style={s.main} className="responsive-main page-main">
         <h1 style={s.heading}>🏗 คลังสินค้า</h1>
 
         {/* ฟอร์มเพิ่มคลังสินค้าใหม่ */}

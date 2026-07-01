@@ -27,10 +27,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={s.page}>
-      <div style={s.card}>
-        <div style={s.grid}>
-          <div style={s.leftPanel}>
+    <div style={s.page} className="responsive-login-page">
+      <div style={s.card} className="responsive-login-card">
+        <div style={s.grid} className="responsive-login-grid">
+          <div style={s.leftPanel} className="responsive-left-panel">
             <div style={s.leftBrand}>
               <div style={s.leftBadge}>WMS</div>
               <h1 style={s.leftTitle}>Warehouse Management System</h1>

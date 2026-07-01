@@ -46,9 +46,9 @@ export default function InventoryPage() {
   };
 
   return (
-    <div style={s.layout}>
+    <div style={s.layout} className="responsive-page-layout page-layout">
       <Sidebar />
-      <div style={s.main}>
+      <div style={s.main} className="responsive-main page-main">
         <h1 style={s.heading}>🏪 จัดการสต็อก</h1>
 
         {/* ฟอร์มทำรายการ รับ/จ่าย/โอน */}
@@ -97,8 +97,8 @@ export default function InventoryPage() {
         )}
 
         {/* ตารางข้อมูลสินค้าแบบตีกรอบมนล้อมรอบ */}
-        <div style={s.tableContainer}>
-          <table style={s.table}>
+        <div style={s.tableContainer} className="responsive-table-wrapper">
+          <table style={s.table} className="responsive-table">
             <thead>
               <tr style={s.thRow}>
                 <th style={s.th}>สินค้า</th>
