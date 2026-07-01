@@ -74,17 +74,24 @@ const s = {
     display: "flex", 
     alignItems: "center",
     justifyContent: "center", 
-    background: "#f8fafc", // สีพื้นหลังเทาอมฟ้าสว่างตัวเดียวกับหน้าอื่นๆ
-    fontFamily: "'Inter', sans-serif" 
+    background: "#f8fafc", 
+    backgroundImage: "url('../assets/whbg.jpg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    fontFamily: "'Inter', sans-serif",
+    position: "relative"
   },
   card: { 
-    background: "#ffffff", 
+    background: "rgba(255,255,255,0.92)", 
     padding: "40px 32px", 
     borderRadius: 16, 
     width: 360,
     boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03)", 
-    border: "1px solid #e2e8f0",
-    textAlign: "center" 
+    border: "1px solid rgba(226, 232, 240, 0.9)",
+    textAlign: "center",
+    position: "relative",
+    zIndex: 1
   },
   logo: { fontSize: 44, marginBottom: 12 },
   title: { color: "#0f172a", margin: "0 0 6px", fontSize: 24, fontWeight: 700 },
