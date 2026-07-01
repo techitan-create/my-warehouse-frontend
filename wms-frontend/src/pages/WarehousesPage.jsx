@@ -8,6 +8,9 @@ export default function WarehousesPage() {
   const [warehouses, setWarehouses] = useState([]);
   const [form, setForm] = useState({ name:"", location:"", capacity:"" });
   const [msg, setMsg] = useState("");
+  const [selectedWarehouse, setSelectedWarehouse] = useState(null);
+  const [warehouseItems, setWarehouseItems] = useState([]);
+  const [warehouseLoading, setWarehouseLoading] = useState(false);
   const canEdit = ["ADMIN", "MANAGER"].includes(user?.role);
   const canDelete = user?.role === "ADMIN";
 
@@ -36,8 +39,25 @@ export default function WarehousesPage() {
     try {
       await api.delete(`/api/v1/warehouses/${id}`);
       fetch();
+      if (selectedWarehouse?.id === id) {
+        setSelectedWarehouse(null);
+        setWarehouseItems([]);
+      }
     } catch (err) {
       alert(err.response?.data?.message || "ลบไม่สำเร็จ");
+    }
+  };
+
+  const openWarehouse = async (warehouse) => {
+    setSelectedWarehouse(warehouse);
+    setWarehouseLoading(true);
+    try {
+      const res = await api.get("/api/v1/inventory");
+      setWarehouseItems(res.data.filter(item => item.warehouseName === warehouse.name));
+    } catch {
+      setWarehouseItems([]);
+    } finally {
+      setWarehouseLoading(false);
     }
   };
 
@@ -86,20 +106,80 @@ export default function WarehousesPage() {
         {/* รายการคลังสินค้าในรูปแบบ Grid Cards มินิมอล */}
         <div style={s.grid}>
           {warehouses.map(w => (
-            <div key={w.id} style={s.card}>
+            <div key={w.id} style={{...s.card, cursor: "pointer"}} onClick={() => openWarehouse(w)}>
               <div style={s.cardIcon}>🏗</div>
               <div style={s.cardName}>{w.name}</div>
               <div style={s.cardInfo}>📍 {w.location || "ไม่ระบุที่ตั้ง"}</div>
               <div style={s.cardInfo}>📦 ความจุ: {w.capacity ? `${Number(w.capacity).toLocaleString()} ชิ้น` : "ไม่จำกัดความจุ"}</div>
               <div style={s.cardId}>Warehouse ID: {w.id}</div>
+              <button style={s.detailBtn} type="button" onClick={(e) => { e.stopPropagation(); openWarehouse(w); }}>
+                ดูสินค้าภายในคลัง
+              </button>
               {canDelete && (
-                <button style={s.delBtn} onClick={() => del(w.id)}>
+                <button style={s.delBtn} onClick={(e) => { e.stopPropagation(); del(w.id); }}>
                   🗑️ ลบคลังนี้
                 </button>
               )}
             </div>
           ))}
         </div>
+
+        {selectedWarehouse && (
+          <div style={s.detailPanel}>
+            <div style={s.detailHeader}>
+              <div>
+                <h2 style={s.detailTitle}>คลัง: {selectedWarehouse.name}</h2>
+                <p style={s.detailSubtitle}>{selectedWarehouse.location || "ไม่ระบุที่ตั้ง"} • ความจุ {selectedWarehouse.capacity ? `${Number(selectedWarehouse.capacity).toLocaleString()} ชิ้น` : "ไม่จำกัด"}</p>
+              </div>
+              <button style={s.closeBtn} type="button" onClick={() => setSelectedWarehouse(null)}>✕ ปิด</button>
+            </div>
+            {warehouseLoading ? (
+              <div style={s.loadingText}>กำลังโหลดรายการสินค้าภายในคลัง...</div>
+            ) : (
+              <div style={s.detailTableWrapper}>
+                {warehouseItems.length > 0 ? (
+                  <table style={s.table}>
+                    <thead>
+                      <tr style={s.th}>
+                        <td style={s.tdth}>สินค้า</td>
+                        <td style={s.tdth}>SKU</td>
+                        <td style={s.tdth}>สต็อก</td>
+                        <td style={s.tdth}>ขั้นต่ำ</td>
+                        <td style={s.tdth}>สูงสุด</td>
+                        <td style={s.tdth}>สถานะ</td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {warehouseItems.map(item => (
+                        <tr key={item.id} style={s.tr}>
+                          <td style={s.td}>{item.productName}</td>
+                          <td style={s.td}>{item.productSku}</td>
+                          <td style={s.td}>{item.quantity}</td>
+                          <td style={s.td}>{item.minStock}</td>
+                          <td style={s.td}>{item.maxStock}</td>
+                          <td style={s.td}>
+                            <span style={{
+                              padding: "4px 12px",
+                              borderRadius: 20,
+                              fontSize: 12,
+                              fontWeight: 600,
+                              background: item.isLowStock ? "#fef3c7" : "#dcfce7",
+                              color: item.isLowStock ? "#b45309" : "#15803d"
+                            }}>
+                              {item.isLowStock ? "LOW" : "HEALTHY"}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div style={s.emptyText}>ยังไม่มีสินค้าตรงกับคลังนี้</div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -120,6 +200,7 @@ const s = {
   
   // ปุ่มบันทึกสีม่วงน้ำเงินอินดิโก้สุดหรู
   btn: { padding: "11px 24px", borderRadius: 8, border: "none", background: "#6366f1", color: "#fff", cursor: "pointer", fontSize: 14, fontWeight: 600, boxShadow: "0 2px 4px rgba(99, 102, 241, 0.2)" },
+  detailBtn: { marginTop: 12, padding: "10px 16px", borderRadius: 10, border: "none", background: "#eef2ff", color: "#3730a3", cursor: "pointer", fontSize: 14, fontWeight: 600, boxShadow: "0 2px 4px rgba(15, 23, 42, 0.08)" },
   
   // ระบบจัดวางการ์ดคลังสินค้า
   grid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 20 },
@@ -133,6 +214,14 @@ const s = {
   cardName: { fontSize: 16, fontWeight: 700, color: "#0f172a" },
   cardInfo: { fontSize: 13, color: "#475569", fontWeight: 500 },
   cardId: { fontSize: 11, color: "#94a3b8", marginTop: 4, fontWeight: 500 },
+  detailPanel: { marginTop: 32, background: "#ffffff", borderRadius: 20, padding: 24, border: "1px solid #e2e8f0", boxShadow: "0 24px 60px rgba(15, 23, 42, 0.08)" },
+  detailHeader: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 20, flexWrap: "wrap" },
+  detailTitle: { fontSize: 22, fontWeight: 700, margin: 0, color: "#0f172a" },
+  detailSubtitle: { margin: 0, fontSize: 14, color: "#64748b" },
+  closeBtn: { padding: "8px 14px", borderRadius: 999, border: "1px solid #e2e8f0", background: "#f8fafc", color: "#475569", cursor: "pointer", fontSize: 14 },
+  detailTableWrapper: { overflowX: "auto", borderRadius: 16, border: "1px solid #e2e8f0" },
+  loadingText: { padding: 28, color: "#64748b", fontSize: 15, textAlign: "center" },
+  emptyText: { padding: 28, color: "#64748b", fontSize: 15, textAlign: "center" },
   
   // ปุ่มลบคลังสินค้าพื้นหลังพาสเทลแดงอ่อน สวยงามไม่ฉูดฉาดทำลายสายตา
   delBtn: { marginTop: 12, padding: "8px 12px", borderRadius: 8, border: "1px solid #fee2e2", background: "#fff5f5", color: "#ef4444", fontWeight: 600, cursor: "pointer", fontSize: 13, transition: "background 0.2s" }
