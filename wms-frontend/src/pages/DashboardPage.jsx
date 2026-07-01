@@ -6,11 +6,27 @@ import api from "../api/axios";
 export default function DashboardPage() {
   const { user } = useAuth();
   const [health, setHealth] = useState(null);
+  const [currentDate, setCurrentDate] = useState("");
+  const [showPopup, setShowPopup] = useState(true);
 
   useEffect(() => {
     api.get("/api/v1/inventory/health")
       .then(r => setHealth(r.data))
       .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const formatter = new Intl.DateTimeFormat("th-TH", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    setCurrentDate(formatter.format(new Date()));
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowPopup(false), 8000);
+    return () => clearTimeout(timer);
   }, []);
 
   // ปรับเฉดสีตัวเลขตัวใหญ่ให้อ่านง่ายและโมเดิร์นขึ้นบนพื้นหลังขาว
@@ -32,8 +48,16 @@ export default function DashboardPage() {
             <p style={s.subSmall}>ภาพรวมการบริหารจัดการคลังสินค้า</p>
           </div>
           <div style={s.topControls}>
-            <div style={s.dateChip}>2 มิถุนายน 2025</div>
+            <div style={s.dateChip}>{currentDate || "กำลังโหลดวันที่..."}</div>
           </div>
+        </div>
+
+        <div style={{...s.popup, opacity: showPopup ? 1 : 0, transform: showPopup ? "translateY(0)" : "translateY(10px)", pointerEvents: showPopup ? "auto" : "none"}}>
+          <div style={s.popupContent}>
+            <div style={s.popupTitle}>อัปเดตสด</div>
+            <div style={s.popupText}>ดึงข้อมูลสต็อกแบบเรียลไทม์และแสดงผลทันที</div>
+          </div>
+          <button style={s.popupClose} onClick={() => setShowPopup(false)}>ปิด</button>
         </div>
 
         {health && (
@@ -238,5 +262,33 @@ const s = {
   recentItem: { display: "flex", alignItems: "flex-start", gap: 12 },
   recentDot: { width: 10, height: 10, borderRadius: "50%", background: "#2563eb", marginTop: 6, flexShrink: 0 },
   recentName: { fontSize: 14, fontWeight: 700, margin: 0, color: "#0f172a" },
-  recentMeta: { fontSize: 13, color: "#64748b", marginTop: 2 }
+  recentMeta: { fontSize: 13, color: "#64748b", marginTop: 2 },
+  popup: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 16,
+    maxWidth: 520,
+    marginBottom: 28,
+    padding: "16px 20px",
+    borderRadius: 18,
+    background: "rgba(59, 130, 246, 0.1)",
+    border: "1px solid rgba(59, 130, 246, 0.25)",
+    color: "#0f172a",
+    transition: "opacity 0.25s ease, transform 0.25s ease",
+    boxShadow: "0 16px 32px rgba(15, 23, 42, 0.08)",
+  },
+  popupContent: { display: "grid", gap: 4 },
+  popupTitle: { fontSize: 14, fontWeight: 700, color: "#1d4ed8" },
+  popupText: { fontSize: 13, color: "#475569" },
+  popupClose: {
+    background: "transparent",
+    border: "none",
+    color: "#2563eb",
+    fontWeight: 700,
+    cursor: "pointer",
+    padding: "8px 10px",
+    borderRadius: 999,
+    transition: "background 0.2s ease",
+  }
 };
