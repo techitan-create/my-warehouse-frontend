@@ -7,7 +7,6 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const [health, setHealth] = useState(null);
   const [currentDate, setCurrentDate] = useState("");
-  const [showPopup, setShowPopup] = useState(true);
 
   useEffect(() => {
     api.get("/api/v1/inventory/health")
@@ -24,15 +23,20 @@ export default function DashboardPage() {
     setCurrentDate(formatter.format(new Date()));
   }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowPopup(false), 8000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // ปรับเฉดสีตัวเลขตัวใหญ่ให้อ่านง่ายและโมเดิร์นขึ้นบนพื้นหลังขาว
   const scoreColor = !health ? "#64748b"
     : health.healthScore >= 80 ? "#22c55e" 
     : health.healthScore >= 50 ? "#f59e0b" : "#ef4444";
+  const healthScorePercent = health ? Math.min(Math.max(health.healthScore, 0), 100) : 0;
+  const scoreStatus = !health ? "กำลังโหลด" : health.healthScore >= 80 ? "แข็งแรง" : health.healthScore >= 50 ? "ต้องระวัง" : "วิกฤติ";
+  const scoreCircleStyle = {
+    width: 150,
+    height: 150,
+    borderRadius: "50%",
+    display: "grid",
+    placeItems: "center",
+    background: `conic-gradient(${scoreColor} 0% ${healthScorePercent}%, #e2e8f0 ${healthScorePercent}% 100%)`,
+    boxShadow: "inset 0 0 0 18px rgba(255,255,255,0.85), 0 20px 40px rgba(15, 23, 42, 0.08)",
+  };
 
   const alertItems = health?.items?.filter(i => i.status !== "HEALTHY") || [];
   const totalLowStock = health?.lowStockCount ?? 0;
@@ -50,14 +54,6 @@ export default function DashboardPage() {
           <div style={s.topControls}>
             <div style={s.dateChip}>{currentDate || "กำลังโหลดวันที่..."}</div>
           </div>
-        </div>
-
-        <div style={{...s.popup, opacity: showPopup ? 1 : 0, transform: showPopup ? "translateY(0)" : "translateY(10px)", pointerEvents: showPopup ? "auto" : "none"}}>
-          <div style={s.popupContent}>
-            <div style={s.popupTitle}>อัปเดตสด</div>
-            <div style={s.popupText}>ดึงข้อมูลสต็อกแบบเรียลไทม์และแสดงผลทันที</div>
-          </div>
-          <button style={s.popupClose} onClick={() => setShowPopup(false)}>ปิด</button>
         </div>
 
         {health && (
@@ -84,10 +80,16 @@ export default function DashboardPage() {
               <div style={s.healthCard}>
                 <div style={s.healthCardLabel}>Health Score</div>
                 <div style={s.healthScoreRow}>
-                  <div style={{...s.score, color: scoreColor}}>{health.healthScore}</div>
+                  <div style={scoreCircleStyle}>
+                    <div style={s.scoreLabel}>{healthScorePercent}%</div>
+                  </div>
                   <div style={s.healthMeta}>
                     <div style={s.healthMetaLabel}>คะแนนรวมคลัง</div>
                     <div style={s.healthMetaValue}>{health.items?.length ?? 0} สินค้า</div>
+                    <div style={s.healthStatus}>{scoreStatus}</div>
+                    <div style={s.healthTrendBar}>
+                      <div style={{...s.healthTrendFill, width: `${healthScorePercent}%`, background: scoreColor}} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -225,9 +227,13 @@ const s = {
   healthCardLabel: { fontSize: 13, fontWeight: 700, color: "#0f172a", marginBottom: 12, textTransform: "uppercase", letterSpacing: "0.08em" },
   healthScoreRow: { display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" },
   score: { fontSize: 72, fontWeight: 800, lineHeight: 1, minWidth: 96 },
-  healthMeta: { display: "grid", gap: 4 },
+  scoreLabel: { fontSize: 32, fontWeight: 800, color: "#0f172a" },
+  healthMeta: { display: "grid", gap: 10 },
   healthMetaLabel: { fontSize: 13, color: "#64748b" },
   healthMetaValue: { fontSize: 18, fontWeight: 700, color: "#0f172a" },
+  healthStatus: { fontSize: 13, fontWeight: 700, color: "#475569", marginTop: 10 },
+  healthTrendBar: { width: 220, height: 10, borderRadius: 999, background: "#e2e8f0", marginTop: 12, overflow: "hidden" },
+  healthTrendFill: { height: "100%", borderRadius: 999 },
   cards: { display: "flex", gap: 16, flexWrap: "wrap" },
   bottomGrid: { display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 18 },
   tablePanel: { background: "#ffffff", borderRadius: 24, padding: 24, boxShadow: "0 16px 36px rgba(15, 23, 42, 0.06)", border: "1px solid #e2e8f0" },
