@@ -540,6 +540,6 @@ dist/assets/geist-latin-wght-normal-BgDaEnEv.woff2          29.40 kB
 dist/assets/wh-CW6LMGWr.jpg                                 49.61 kB
 dist/assets/whbg-BuIpxsan.jpg                               65.98 kB
 dist/assets/index-uN57aOhW.css                              45.62 kB │ gzip:   8.26 kB
-dist/assets/index-CaOjxo7L.js                              481.29 kB │ gzip: 151.77 kB
+dist/assets/index-DNV7PFSp.js                              481.48 kB │ gzip: 151.80 kB
 
-[32m✓ built in 1.66s[39m
+[32m✓ built in 1.65s[39m

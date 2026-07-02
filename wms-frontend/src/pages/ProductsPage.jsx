@@ -53,7 +53,9 @@ export default function ProductsPage() {
               <input style={s.input} placeholder="ราคา*" type="number" required
                 value={form.price} onChange={e=>setForm({...form,price:e.target.value})} />
               <input style={s.input} placeholder="สต็อกขั้นต่ำ (minStock)" type="number"
-                value={form.minStock} onChange={e=>setForm({...form,minStock:e.target.value})} />
+                value={form.minStock} onChange={e=>setForm({...form,minStock:Number(e.target.value)})} />
+              <input style={s.input} placeholder="สต็อกสูงสุด (maxStock)" type="number"
+                value={form.maxStock} onChange={e=>setForm({...form,maxStock:Number(e.target.value)})} />
             </div>
             <input style={{...s.input, width:"100%", boxSizing:"border-box", marginBottom: 16}}
               placeholder="คำอธิบายรายละเอียดสินค้า"
