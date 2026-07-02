@@ -28,6 +28,7 @@ export default function DashboardPage() {
     : health.healthScore >= 50 ? "#f59e0b" : "#ef4444";
   const healthScorePercent = health ? Math.min(Math.max(health.healthScore, 0), 100) : 0;
   const scoreStatus = !health ? "กำลังโหลด" : health.healthScore >= 80 ? "แข็งแรง" : health.healthScore >= 50 ? "ต้องระวัง" : "วิกฤติ";
+  
   const scoreCircleStyle = {
     width: 150,
     height: 150,
@@ -44,6 +45,14 @@ export default function DashboardPage() {
 
   return (
     <div style={s.layout} className="responsive-page-layout page-layout">
+      {/* 🛑 เพิ่ม Style บังคับซ่อนเมาส์ปกติทุกจุดในหน้านี้ (ยกเว้นปุ่มและกล่องข้อความ) */}
+      <style>{`
+        * { cursor: none !important; }
+        button, a, input, select, textarea, [style*="cursor: pointer"] { 
+          cursor: auto !important; 
+        }
+      `}</style>
+
       <Sidebar />
       <div style={s.main} className="responsive-main page-main">
         <div style={s.headerRow}>
@@ -178,13 +187,13 @@ export default function DashboardPage() {
   );
 }
 
-// คอมโพเนนต์การ์ดแบบขาวคลีนตัดขอบเทาบางๆ มีมิติเงาซอฟท์ๆ
+// ✨ อัปเดต: ปรับขนาดตัวอักษรและไอคอนให้ใหญ่และอ่านง่ายขึ้น
 function OverviewCard({ label, value, icon, color }) {
   return (
     <div style={{
       background: "#ffffff",
       borderRadius: 20,
-      padding: 20,
+      padding: 24, // ขยาย Padding
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
@@ -192,36 +201,37 @@ function OverviewCard({ label, value, icon, color }) {
       border: "1px solid #eef2ff"
     }}>
       <div>
-        <div style={{ fontSize: 14, fontWeight: 700, color: "#475569", marginBottom: 8 }}>{label}</div>
-        <div style={{ fontSize: 32, fontWeight: 800, color: "#0f172a" }}>{value}</div>
+        <div style={{ fontSize: 16, fontWeight: 700, color: "#475569", marginBottom: 8 }}>{label}</div>
+        <div style={{ fontSize: 40, fontWeight: 800, color: "#0f172a" }}>{value}</div> {/* ขยายตัวเลขเป็น 40 */}
       </div>
-      <div style={{ width: 48, height: 48, borderRadius: 16, background: "rgba(99, 102, 241, 0.08)", display: "grid", placeItems: "center", color, fontSize: 18 }}>
+      <div style={{ width: 56, height: 56, borderRadius: 16, background: "rgba(99, 102, 241, 0.08)", display: "grid", placeItems: "center", color, fontSize: 24 }}> {/* ขยายกล่องไอคอน */}
         {icon}
       </div>
     </div>
   );
 }
 
+// ✨ อัปเดต: ขยายขนาดทั้งหมดใน StatCard ด้วยเช่นกัน
 function StatCard({ label, value, color, icon }) {
   return (
     <div style={{ 
       background: "#ffffff", 
-      padding: 20, 
-      borderRadius: 14,
+      padding: 24, // ขยาย Padding
+      borderRadius: 16,
       textAlign: "center", 
-      minWidth: 130,
+      minWidth: 140,
       flex: 1,
       border: "1px solid #e2e8f0",
       boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)"
     }}>
-      <div style={{fontSize: 28, marginBottom: 4}}>{icon}</div>
-      <div style={{fontSize: 30, fontWeight: 700, color}}>{value}</div>
-      <div style={{color: "#64748b", fontSize: 13, marginTop: 4, fontWeight: 500}}>{label}</div>
+      <div style={{fontSize: 36, marginBottom: 8}}>{icon}</div> {/* ขยายไอคอน */}
+      <div style={{fontSize: 42, fontWeight: 800, color}}>{value}</div> {/* ขยายตัวเลขเป็น 42 */}
+      <div style={{color: "#64748b", fontSize: 15, marginTop: 4, fontWeight: 600}}>{label}</div> {/* ขยาย Label */}
     </div>
   );
 }
 
-// 🎨 ปรับเปลี่ยนชุดสีของสไตล์ชีททั้งหมดให้เป็นคลีนโทนระบบ Dashboard แบบใหม่
+// 🎨 สไตล์หลัก
 const s = {
   layout: { display: "flex", minHeight: "100vh", background: "#eef3fb", color: "#334155", fontFamily: "'Inter', sans-serif" },
   main: { flex: 1, padding: 32, overflowY: "auto", minHeight: "100vh" },
@@ -289,32 +299,4 @@ const s = {
   recentDot: { width: 10, height: 10, borderRadius: "50%", background: "#2563eb", marginTop: 6, flexShrink: 0 },
   recentName: { fontSize: 14, fontWeight: 700, margin: 0, color: "#0f172a" },
   recentMeta: { fontSize: 13, color: "#64748b", marginTop: 2 },
-  popup: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 16,
-    maxWidth: 520,
-    marginBottom: 28,
-    padding: "16px 20px",
-    borderRadius: 18,
-    background: "rgba(59, 130, 246, 0.1)",
-    border: "1px solid rgba(59, 130, 246, 0.25)",
-    color: "#0f172a",
-    transition: "opacity 0.25s ease, transform 0.25s ease",
-    boxShadow: "0 16px 32px rgba(15, 23, 42, 0.08)",
-  },
-  popupContent: { display: "grid", gap: 4 },
-  popupTitle: { fontSize: 14, fontWeight: 700, color: "#1d4ed8" },
-  popupText: { fontSize: 13, color: "#475569" },
-  popupClose: {
-    background: "transparent",
-    border: "none",
-    color: "#2563eb",
-    fontWeight: 700,
-    cursor: "pointer",
-    padding: "8px 10px",
-    borderRadius: 999,
-    transition: "background 0.2s ease",
-  }
 };
