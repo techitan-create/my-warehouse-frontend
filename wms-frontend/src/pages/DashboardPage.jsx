@@ -67,12 +67,19 @@ export default function DashboardPage() {
 
         {health && (
           <>
-            <div style={s.cards}>
-              <StatCard label="สินค้าทั้งหมด" value={health.totalProducts} color="#4338ca" icon="📦" />
-              <StatCard label="ปกติ" value={health.healthyCount} color="#16a34a" icon="✅" />
-              <StatCard label="สต็อกต่ำ" value={totalLowStock} color="#d97706" icon="⚠️" />
-              <StatCard label="สินค้าหมด" value={totalCritical} color="#b91c1c" icon="⛔" />
-            </div>
+           <div style={{
+  display: "flex",
+  gap: 12,
+  flexWrap: "nowrap",        // ไม่ตัดบรรทัด
+  overflowX: "auto",         // scroll แนวนอนถ้าจอแคบ
+  marginBottom: 24,
+  paddingBottom: 4,          // เผื่อ scrollbar
+}}>
+  <StatCard label="สินค้าทั้งหมด" value={health.totalProducts} color="#4338ca" icon="📦" />
+  <StatCard label="ปกติ"          value={health.healthyCount}  color="#16a34a" icon="✅" />
+  <StatCard label="สต็อกต่ำ"      value={totalLowStock}        color="#d97706" icon="⚠️" />
+  <StatCard label="สินค้าหมด"     value={totalCritical}        color="#b91c1c" icon="⛔" />
+</div>
             <div style={s.pageCard}>
               <div style={s.topGrid}>
                 <div style={s.healthCard}>
@@ -215,34 +222,25 @@ function OverviewCard({ label, value, icon, color }) {
 function StatCard({ label, value, color, icon }) {
   return (
     <div style={{
-      background: "#ffffff",
-      padding: 24,
-      borderRadius: 24,
+      background: "#fff",
+      padding: "16px 20px",
+      borderRadius: 14,
       textAlign: "center",
-      minWidth: 180,
       border: "1px solid #e2e8f0",
-      boxShadow: "0 20px 45px rgba(15, 23, 42, 0.08)",
-      display: "grid",
-      placeItems: "center",
-      gap: 12,
-      minHeight: 180,
+      boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+      minWidth: 130,          // กว้างขั้นต่ำ ไม่ให้หด
+      flex: "0 0 auto",       // ไม่ยืดไม่หด อยู่ขนาดเดิม
+      whiteSpace: "nowrap",   // ข้อความในการ์ดไม่ตัดบรรทัด
     }}>
-      <div style={{
-        width: 60,
-        height: 60,
-        borderRadius: 18,
-        background: `${color}22`,
-        display: "grid",
-        placeItems: "center",
-        fontSize: 28,
-      }}>
-        {icon}
+      <div style={{ fontSize: 26, marginBottom: 4 }}>{icon}</div>
+      <div style={{ fontSize: 28, fontWeight: 700, color }}>{value}</div>
+      <div style={{ color: "#64748b", fontSize: 12, marginTop: 4, fontWeight: 500 }}>
+        {label}
       </div>
-      <div style={{ fontSize: 44, fontWeight: 800, color }}>{value}</div>
-      <div style={{ color: "#475569", fontSize: 14, fontWeight: 700 }}>{label}</div>
     </div>
   );
 }
+
 
 // 🎨 สไตล์หลัก
 const s = {
