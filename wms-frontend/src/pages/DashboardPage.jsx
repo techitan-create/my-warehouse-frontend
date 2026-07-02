@@ -214,19 +214,32 @@ function OverviewCard({ label, value, icon, color }) {
 // ✨ อัปเดต: ขยายขนาดทั้งหมดใน StatCard ด้วยเช่นกัน
 function StatCard({ label, value, color, icon }) {
   return (
-    <div style={{ 
-      background: "#ffffff", 
-      padding: 24, // ขยาย Padding
-      borderRadius: 16,
-      textAlign: "center", 
-      minWidth: 140,
-      flex: 1,
+    <div style={{
+      background: "#ffffff",
+      padding: 24,
+      borderRadius: 24,
+      textAlign: "center",
+      minWidth: 180,
       border: "1px solid #e2e8f0",
-      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)"
+      boxShadow: "0 20px 45px rgba(15, 23, 42, 0.08)",
+      display: "grid",
+      placeItems: "center",
+      gap: 12,
+      minHeight: 180,
     }}>
-      <div style={{fontSize: 36, marginBottom: 8}}>{icon}</div> {/* ขยายไอคอน */}
-      <div style={{fontSize: 42, fontWeight: 800, color}}>{value}</div> {/* ขยายตัวเลขเป็น 42 */}
-      <div style={{color: "#64748b", fontSize: 15, marginTop: 4, fontWeight: 600}}>{label}</div> {/* ขยาย Label */}
+      <div style={{
+        width: 60,
+        height: 60,
+        borderRadius: 18,
+        background: `${color}22`,
+        display: "grid",
+        placeItems: "center",
+        fontSize: 28,
+      }}>
+        {icon}
+      </div>
+      <div style={{ fontSize: 44, fontWeight: 800, color }}>{value}</div>
+      <div style={{ color: "#475569", fontSize: 14, fontWeight: 700 }}>{label}</div>
     </div>
   );
 }
@@ -264,7 +277,13 @@ const s = {
   healthStatus: { fontSize: 13, fontWeight: 700, color: "#475569", marginTop: 10 },
   healthTrendBar: { width: 220, height: 10, borderRadius: 999, background: "#e2e8f0", marginTop: 12, overflow: "hidden" },
   healthTrendFill: { height: "100%", borderRadius: 999 },
-  cards: { display: "flex", gap: 16, flexWrap: "wrap" },
+  cards: {
+    display: "grid",
+    gridTemplateColumns: "repeat(4, minmax(180px, 1fr))",
+    gap: 16,
+    marginBottom: 24,
+    alignItems: "stretch",
+  },
   bottomGrid: { display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 18 },
   tablePanel: { background: "#ffffff", borderRadius: 24, padding: 24, boxShadow: "0 16px 36px rgba(15, 23, 42, 0.06)", border: "1px solid #e2e8f0" },
   sectionHeader: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 18 },
