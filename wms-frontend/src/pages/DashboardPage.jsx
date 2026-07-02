@@ -69,8 +69,9 @@ export default function DashboardPage() {
           <>
            <div style={{
   display: "flex",
-  gap: 12,
-  flexWrap: "nowrap",        // ไม่ตัดบรรทัด
+  gap: 16,
+  flexWrap: "wrap",        // ยอมให้เลย์เอาต์ห่อบรรทัดเมื่อแคบ
+  justifyContent: "space-between",
   overflowX: "auto",         // scroll แนวนอนถ้าจอแคบ
   marginBottom: 24,
   paddingBottom: 4,          // เผื่อ scrollbar
@@ -202,16 +203,18 @@ function OverviewCard({ label, value, icon, color }) {
       borderRadius: 20,
       padding: 24, // ขยาย Padding
       display: "flex",
-      alignItems: "center",
+      alignItems: "stretch",
       justifyContent: "space-between",
+      flexDirection: "column",
       boxShadow: "0 20px 45px rgba(15, 23, 42, 0.06)",
-      border: "1px solid #eef2ff"
+      border: "1px solid #eef2ff",
+      minHeight: 180,
     }}>
       <div>
         <div style={{ fontSize: 16, fontWeight: 700, color: "#475569", marginBottom: 8 }}>{label}</div>
         <div style={{ fontSize: 40, fontWeight: 800, color: "#0f172a" }}>{value}</div> {/* ขยายตัวเลขเป็น 40 */}
       </div>
-      <div style={{ width: 56, height: 56, borderRadius: 16, background: "rgba(99, 102, 241, 0.08)", display: "grid", placeItems: "center", color, fontSize: 24 }}> {/* ขยายกล่องไอคอน */}
+      <div style={{ width: 56, height: 56, borderRadius: 16, background: "rgba(99, 102, 241, 0.08)", display: "grid", placeItems: "center", color, fontSize: 24, marginTop: 20 }}> {/* ขยายกล่องไอคอน */}
         {icon}
       </div>
     </div>
@@ -257,8 +260,8 @@ const s = {
   alertNumber: { fontSize: 28, fontWeight: 800, color: "#111827", marginBottom: 8 },
   alertCaption: { fontSize: 13, color: "#475569" },
   pageCard: { background: "#ffffff", borderRadius: 28, padding: 28, border: "1px solid #eef2ff", boxShadow: "0 26px 60px rgba(15, 23, 42, 0.08)", marginBottom: 28 },
-  topGrid: { display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 18, marginBottom: 28 },
-  overviewGrid: { display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 16 },
+  topGrid: { display: "grid", gridTemplateColumns: "minmax(320px, 1.25fr) minmax(300px, 0.85fr)", gap: 18, marginBottom: 28, alignItems: "stretch" },
+  overviewGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 },
   watchlistHeader: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 20, flexWrap: "wrap" },
   watchlistTitle: { fontSize: 18, fontWeight: 700, color: "#0f172a" },
   watchlistSubtitle: { fontSize: 13, color: "#64748b" },
@@ -282,7 +285,7 @@ const s = {
     marginBottom: 24,
     alignItems: "stretch",
   },
-  bottomGrid: { display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 18 },
+  bottomGrid: { display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 18, alignItems: "start" },
   tablePanel: { background: "#ffffff", borderRadius: 24, padding: 24, boxShadow: "0 16px 36px rgba(15, 23, 42, 0.06)", border: "1px solid #e2e8f0" },
   sectionHeader: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 18 },
   sectionTitle: { fontSize: 18, fontWeight: 700, margin: 0, color: "#0f172a" },
