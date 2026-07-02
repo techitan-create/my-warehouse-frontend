@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [health, setHealth] = useState(null);
   const [currentDate, setCurrentDate] = useState("");
@@ -67,16 +69,14 @@ export default function DashboardPage() {
 
         {health && (
           <>
-           <div style={{
-  display: "flex",
-  gap: 16,
-  flexWrap: "wrap",        // ยอมให้เลย์เอาต์ห่อบรรทัดเมื่อแคบ
-  justifyContent: "space-between",
-  overflowX: "auto",         // scroll แนวนอนถ้าจอแคบ
-  marginBottom: 24,
-  paddingBottom: 4,          // เผื่อ scrollbar
-}}>
-  <StatCard label="สินค้าทั้งหมด" value={health.totalProducts} color="#4338ca" icon="📦" />
+           <div style={s.statsRow}>
+  <StatCard
+    label="สินค้าทั้งหมด"
+    value={health.totalProducts}
+    color="#4338ca"
+    icon="📦"
+    onClick={() => navigate("/products")}
+  />
   <StatCard label="ปกติ"          value={health.healthyCount}  color="#16a34a" icon="✅" />
   <StatCard label="สต็อกต่ำ"      value={totalLowStock}        color="#d97706" icon="⚠️" />
   <StatCard label="สินค้าหมด"     value={totalCritical}        color="#b91c1c" icon="⛔" />
@@ -222,25 +222,37 @@ function OverviewCard({ label, value, icon, color }) {
 }
 
 // ✨ อัปเดต: ขยายขนาดทั้งหมดใน StatCard ด้วยเช่นกัน
-function StatCard({ label, value, color, icon }) {
+function StatCard({ label, value, color, icon, onClick }) {
   return (
-    <div style={{
-      background: "#fff",
-      padding: "16px 20px",
-      borderRadius: 14,
-      textAlign: "center",
-      border: "1px solid #e2e8f0",
-      boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-      minWidth: 130,          // กว้างขั้นต่ำ ไม่ให้หด
-      flex: "0 0 auto",       // ไม่ยืดไม่หด อยู่ขนาดเดิม
-      whiteSpace: "nowrap",   // ข้อความในการ์ดไม่ตัดบรรทัด
-    }}>
-      <div style={{ fontSize: 26, marginBottom: 4 }}>{icon}</div>
-      <div style={{ fontSize: 28, fontWeight: 700, color }}>{value}</div>
-      <div style={{ color: "#64748b", fontSize: 12, marginTop: 4, fontWeight: 500 }}>
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        background: "#fff",
+        padding: "24px 22px",
+        borderRadius: 20,
+        textAlign: "center",
+        border: "1px solid #e2e8f0",
+        boxShadow: "0 8px 24px rgba(15,23,42,0.08)",
+        minWidth: 180,
+        flex: "1 1 220px",
+        cursor: onClick ? "pointer" : "default",
+        transition: "transform 180ms ease, box-shadow 180ms ease",
+        outline: "none",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+      onMouseEnter={e => onClick && (e.currentTarget.style.transform = "translateY(-2px)")}
+      onMouseLeave={e => onClick && (e.currentTarget.style.transform = "translateY(0)")}
+    >
+      <div style={{ fontSize: 30, marginBottom: 6 }}>{icon}</div>
+      <div style={{ fontSize: 38, fontWeight: 800, color }}>{value}</div>
+      <div style={{ color: "#64748b", fontSize: 13, marginTop: 8, fontWeight: 600 }}>
         {label}
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -262,6 +274,7 @@ const s = {
   pageCard: { background: "#ffffff", borderRadius: 28, padding: 28, border: "1px solid #eef2ff", boxShadow: "0 26px 60px rgba(15, 23, 42, 0.08)", marginBottom: 28 },
   topGrid: { display: "grid", gridTemplateColumns: "minmax(320px, 1.25fr) minmax(300px, 0.85fr)", gap: 18, marginBottom: 28, alignItems: "stretch" },
   overviewGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16 },
+  statsRow: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 16, marginBottom: 24 },
   watchlistHeader: { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 20, flexWrap: "wrap" },
   watchlistTitle: { fontSize: 18, fontWeight: 700, color: "#0f172a" },
   watchlistSubtitle: { fontSize: 13, color: "#64748b" },
