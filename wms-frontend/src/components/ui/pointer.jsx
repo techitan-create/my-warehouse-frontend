@@ -22,6 +22,9 @@ export function Pointer(
   const x = useMotionValue(0)
   const y = useMotionValue(0)
   const [isActive, setIsActive] = useState(false)
+  // --- แก้ไข: เพิ่ม State เพื่อเช็คว่าเมาส์อยู่เหนือปุ่มหรือไม่ ---
+  const [isOverInteractive, setIsOverInteractive] = useState(false)
+  // --------------------------------------------------------
   const containerRef = useRef(null)
 
   useEffect(() => {
@@ -33,6 +36,28 @@ export function Pointer(
     const handleMouseMove = (e) => {
       x.set(e.clientX)
       y.set(e.clientY)
+      
+      // --- แก้ไข: เพิ่มตรรกะตรวจจับการ Hover เหนือปุ่มหรือลิงก์ ---
+      const elementUnderMouse = document.elementFromPoint(e.clientX, e.clientY);
+      const isInteractive = elementUnderMouse && (
+        elementUnderMouse.tagName === 'BUTTON' || 
+        elementUnderMouse.tagName === 'A' ||
+        elementUnderMouse.closest('button') || 
+        elementUnderMouse.closest('a') ||
+        getComputedStyle(elementUnderMouse).cursor === 'pointer'
+      );
+      
+      if (isInteractive) {
+        setIsOverInteractive(true);
+        // แสดงเมาส์ปกติ (Browser จะทำเองถ้าเราไม่สั่ง cursor: none)
+        if (parentElement) parentElement.style.cursor = "auto"; 
+      } else {
+        setIsOverInteractive(false);
+        // ซ่อนเมาส์ปกติ และแสดงนิ้วชี้แทน
+        if (parentElement) parentElement.style.cursor = "none";
+      }
+      // -----------------------------------------------------
+
       setIsActive(true)
     }
 
@@ -47,7 +72,8 @@ export function Pointer(
     }
 
     if (parentElement) {
-      parentElement.style.cursor = "none"
+      // เอาบรรทัดนี้ออก: parentElement.style.cursor = "none" 
+      // เราจะคุมผ่าน handleMouseMove แทน
       parentElement.addEventListener("mousemove", handleMouseMove)
       parentElement.addEventListener("mouseenter", handleMouseEnter)
       parentElement.addEventListener("mouseleave", handleMouseLeave)
@@ -67,7 +93,8 @@ export function Pointer(
     <>
       <div ref={containerRef} />
       <AnimatePresence>
-        {isActive && (
+        {/* --- แก้ไข: เพิ่มเงื่อนไข !isOverInteractive --- */}
+        {isActive && !isOverInteractive && (
           <motion.div
             className="pointer-events-none fixed z-50 transform-[translate(-50%,-50%)]"
             style={{
