@@ -14,30 +14,35 @@ function ProtectedRoute({ children, roles }) {
   if (!token) return <Navigate to="/login" replace />;
   if (roles && !roles.includes(user?.role))
     return <Navigate to="/dashboard" replace />;
+  
+  // เอา Pointer ออกจากตรงนี้ แล้วคืนค่า children ปกติ
   return children;
 }
 
 function App() {
   return (
     <BrowserRouter>
+      {/* ย้าย Pointer มาคลุม Routes ทั้งหมดตรงนี้แทน! */}
       <Pointer>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/oauth2/callback" element={<OAuth2Callback />} />
-          <Route path="/dashboard" element={
-            <ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-          <Route path="/products" element={
-            <ProtectedRoute><ProductsPage /></ProtectedRoute>} />
-          <Route path="/inventory" element={
-            <ProtectedRoute><InventoryPage /></ProtectedRoute>} />
-          <Route path="/warehouses" element={
-            <ProtectedRoute><WarehousesPage /></ProtectedRoute>} />
-          <Route path="/users" element={
-            <ProtectedRoute roles={["ADMIN"]}>
-              <UsersPage />
-            </ProtectedRoute>} />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
+        <div className="min-h-screen w-full bg-background relative">
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/oauth2/callback" element={<OAuth2Callback />} />
+            <Route path="/dashboard" element={
+              <ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+            <Route path="/products" element={
+              <ProtectedRoute><ProductsPage /></ProtectedRoute>} />
+            <Route path="/inventory" element={
+              <ProtectedRoute><InventoryPage /></ProtectedRoute>} />
+            <Route path="/warehouses" element={
+              <ProtectedRoute><WarehousesPage /></ProtectedRoute>} />
+            <Route path="/users" element={
+              <ProtectedRoute roles={["ADMIN"]}>
+                <UsersPage />
+              </ProtectedRoute>} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </div>
       </Pointer>
     </BrowserRouter>
   );
