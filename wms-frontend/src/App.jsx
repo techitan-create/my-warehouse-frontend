@@ -20,23 +20,25 @@ function ProtectedRoute({ children, roles }) {
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/oauth2/callback" element={<OAuth2Callback />} />
-        <Route path="/dashboard" element={
-          <ProtectedRoute><Pointer><DashboardPage /></Pointer></ProtectedRoute>} />
-        <Route path="/products" element={
-          <ProtectedRoute><Pointer><ProductsPage /></Pointer></ProtectedRoute>} />
-        <Route path="/inventory" element={
-          <ProtectedRoute><Pointer><InventoryPage /></Pointer></ProtectedRoute>} />
-        <Route path="/warehouses" element={
-          <ProtectedRoute><Pointer><WarehousesPage /></Pointer></ProtectedRoute>} />
-        <Route path="/users" element={
-          <ProtectedRoute roles={["ADMIN"]}>
-            <Pointer><UsersPage /></Pointer>
-          </ProtectedRoute>} />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
+      <Pointer>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/oauth2/callback" element={<OAuth2Callback />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/products" element={
+            <ProtectedRoute><ProductsPage /></ProtectedRoute>} />
+          <Route path="/inventory" element={
+            <ProtectedRoute><InventoryPage /></ProtectedRoute>} />
+          <Route path="/warehouses" element={
+            <ProtectedRoute><WarehousesPage /></ProtectedRoute>} />
+          <Route path="/users" element={
+            <ProtectedRoute roles={["ADMIN"]}>
+              <UsersPage />
+            </ProtectedRoute>} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+      </Pointer>
     </BrowserRouter>
   );
 }
