@@ -77,9 +77,27 @@ export default function DashboardPage() {
     icon="📦"
     onClick={() => navigate("/products")}
   />
-  <StatCard label="ปกติ"          value={health.healthyCount}  color="#16a34a" icon="✅" />
-  <StatCard label="สต็อกต่ำ"      value={totalLowStock}        color="#d97706" icon="⚠️" />
-  <StatCard label="สินค้าหมด"     value={totalCritical}        color="#b91c1c" icon="⛔" />
+  <StatCard
+    label="ปกติ"
+    value={health.healthyCount}
+    color="#16a34a"
+    icon="✅"
+    onClick={() => navigate("/inventory?status=HEALTHY")}
+  />
+  <StatCard
+    label="สต็อกต่ำ"
+    value={totalLowStock}
+    color="#d97706"
+    icon="⚠️"
+    onClick={() => navigate("/inventory?status=LOW")}
+  />
+  <StatCard
+    label="สินค้าหมด"
+    value={totalCritical}
+    color="#b91c1c"
+    icon="⛔"
+    onClick={() => navigate("/inventory?status=CRITICAL")}
+  />
 </div>
             <div style={s.pageCard}>
               <div style={s.topGrid}>

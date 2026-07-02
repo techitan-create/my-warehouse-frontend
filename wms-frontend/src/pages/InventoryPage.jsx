@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/axios";
 
 export default function InventoryPage() {
+  const navigate = useNavigate();
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const statusParam = searchParams.get("status");
   const [inventory, setInventory] = useState([]);
   const [form, setForm] = useState({
     productId: "", warehouseId: "",
@@ -17,6 +21,17 @@ export default function InventoryPage() {
     api.get("/api/v1/inventory").then(r => setInventory(r.data));
 
   useEffect(() => { fetchInventory(); }, []);
+
+  const filteredInventory = inventory.filter(i => {
+    const status = i.quantity === 0 ? "CRITICAL"
+      : i.isLowStock ? "LOW"
+      : "HEALTHY";
+    return !statusParam || status === statusParam;
+  });
+
+  const filterLabel = statusParam === "LOW" ? "สต็อกต่ำ"
+    : statusParam === "CRITICAL" ? "สินค้าหมด"
+    : statusParam === "HEALTHY" ? "ปกติ" : null;
 
   const handleMove = async (e) => {
     e.preventDefault();
@@ -97,6 +112,32 @@ export default function InventoryPage() {
         )}
 
         {/* ตารางข้อมูลสินค้าแบบตีกรอบมนล้อมรอบ */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
+          <div>
+            <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "#0f172a" }}>
+              {filterLabel ? `สต็อก (${filterLabel})` : "สต็อกทั้งหมด"}
+            </h2>
+            {filterLabel && (
+              <button
+                type="button"
+                onClick={() => navigate("/inventory")}
+                style={{
+                  marginTop: 8,
+                  padding: "8px 14px",
+                  borderRadius: 999,
+                  border: "1px solid #c7d2fe",
+                  background: "#eef2ff",
+                  color: "#2563eb",
+                  cursor: "pointer",
+                  fontSize: 13,
+                  fontWeight: 700,
+                }}
+              >
+                ล้างตัวกรอง
+              </button>
+            )}
+          </div>
+        </div>
         <div style={s.tableContainer} className="responsive-table-wrapper">
           <table style={s.table} className="responsive-table">
             <thead>
@@ -111,7 +152,7 @@ export default function InventoryPage() {
               </tr>
             </thead>
             <tbody>
-              {inventory.map(i => {
+              {filteredInventory.map(i => {
                 const status = i.quantity === 0 ? "CRITICAL"
                   : i.isLowStock ? "LOW"
                   : i.quantity >= i.maxStock ? "OVERSTOCK" : "HEALTHY";
